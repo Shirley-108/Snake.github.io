@@ -27,7 +27,7 @@ let left = new Audio();
 let down = new Audio();
 
 dead.src = "audio/dead.mp3";
-eat.src = "audio/EAT2.mp3";
+eat.src = "audio/eat.mp3";
 up.src = "audio/up.mp3";
 right.src = "audio/right.mp3";
 left.src = "audio/left.mp3";
@@ -38,7 +38,6 @@ down.src = "audio/down.mp3";
 let snake = [];
 
 snake[0] = {
-    //貪食蛇起始位置，數字改變位置也會改變
     x : 9 * box,
     y : 10 * box
 };
@@ -55,51 +54,29 @@ let food = {
 let score = 100;
 
 //control the snake
-//作業:1.改成wasd 2.改食物圖 3.分數起始100、每吃一個-5 4.蛇斜角移動 5.控制食物位置，蛇自動移動
-let j;
+
+let d;
 
 document.addEventListener("keydown",direction);
 
 function direction(event){
     let key = event.keyCode;
-    if( key == 65 && j != "RIGHT"){
+    if( key == 65 && d != "RIGHT"){
         left.play();
-        j = "LEFT";
-    }else if(key == 87 && j != "DOWN"){
-        j = "UP";
+        d = "LEFT";
+    }else if(key == 87 && d != "DOWN"){
+        d = "UP";
         up.play();
-    }else if(key == 68 && j != "LEFT"){
-        j = "RIGHT";
+    }else if(key == 68 && d != "LEFT"){
+        d = "RIGHT";
         right.play();
-    }else if(key == 83 && j != "UP"){
-        j = "DOWN";
+    }else if(key == 83 && d != "UP"){
+        d = "DOWN";
         down.play();
     }
-    else if (key==81  && j!== "DR") j = "UL";
-    else if (key==69  && j!== "DL") j = "UR";
-    else if (key==90  && j!== "UR") j = "DL";
-    else if (key==67  && j!== "UL") j = "DR";
 }
 
-/* 控制食物
-    let d = "UP"
-    let key = event.keyCode;
-    if( key == 65 && j != "RIGHT"){
-        left.play();
-        j = "LEFT";
-    }else if(key == 87 && j != "DOWN"){
-        j = "UP";
-        up.play();
-    }else if(key == 68 && j != "LEFT"){
-        j = "RIGHT";
-        right.play();
-    }else if(key == 83 && j != "UP"){
-        j = "DOWN";
-        down.play();
-    }
-*/
-
-// cheack 碰撞 function
+// cheack collision function
 function collision(head,array){
     for(let i = 0; i < array.length; i++){
         if(head.x == array[i].x && head.y == array[i].y){
@@ -123,45 +100,20 @@ function draw(){
         ctx.strokeRect(snake[i].x,snake[i].y,box,box);
     }
     
-    ctx.drawImage(foodImg, food.x, food.y);//畫出食物
+    ctx.drawImage(foodImg, food.x, food.y);
     
-    let food2X = food2[0].x;
-    let food2Y = food2[0].y;
-
     // old head position
-    let snakeX = snake[0].x;//蛇頭x座標
-    let snakeY = snake[0].y;//蛇頭y座標
+    let snakeX = snake[0].x;
+    let snakeY = snake[0].y;
     
     // which direction
-    /*if( j == "LEFT") snakeX -= box;
-    if( j == "UP") snakeY -= box;
-    if( j == "RIGHT") snakeX += box;
-    if( j == "DOWN") snakeY += box;*/
-
-    if( j == "LEFT") food2X -= box;
-    if( j == "UP") food2Y -= box;
-    if( j == "RIGHT") food2X += box;
-    if( j == "DOWN") food2Y += box;
-
-   /*if(j=="UL"){
-        snakeX-=box;
-        snakeY-=box;
-    }
-    if(j=="UR"){
-        snakeX-=box;
-        snakeY-=box;
-    }
-    if(j=="DL"){
-        snakeX-=box;
-        snakeY-=box;
-    }
-    if(j=="DR"){
-        snakeX-=box;
-        snakeY-=box;
-    }*/
+    if( d == "LEFT") snakeX -= box;
+    if( d == "UP") snakeY -= box;
+    if( d == "RIGHT") snakeX += box;
+    if( d == "DOWN") snakeY += box;
     
     // if the snake eats the food
-    if(snakeX == food.x && snakeY == food.y){//如果蛇和食物座標相同
+    if(snakeX == food.x && snakeY == food.y){
         score = score - 5;
         eat.play();
         food = {
@@ -187,10 +139,6 @@ function draw(){
         clearInterval(game);
         dead.play();
     }
-    else if(score == 0){
-        clearInterval(game);
-        dead.play();
-    }
     
     snake.unshift(newHead);
     
@@ -201,22 +149,4 @@ function draw(){
 
 // call draw function every 100 ms
 
-let game = setInterval(draw,300);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+let game = setInterval(draw,100);
